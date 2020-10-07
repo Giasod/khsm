@@ -40,10 +40,19 @@ RSpec.describe GamesController, type: :controller do
       expect(flash[:alert]).to be
     end
     
-    it 'cannot #answer' do
-      put :answer, id: game_w_questions.id, letter: game_w_questions.current_game_question.correct_answer_key
+    it 'cannot #answer (answer correct)' do
+      put :answer, id: game_w_questions.id, letter: 'b'
       game = assigns(:game)
       
+      expect(game).to be_nil
+      expect(response).to redirect_to(new_user_session_path)
+      expect(flash[:alert]).to be
+    end
+
+    it 'cannot #answer (answer wrong)' do
+      put :answer, id: game_w_questions.id, letter: 'a'
+      game = assigns(:game)
+  
       expect(game).to be_nil
       expect(response).to redirect_to(new_user_session_path)
       expect(flash[:alert]).to be
@@ -60,8 +69,6 @@ RSpec.describe GamesController, type: :controller do
     end
     
     it 'cannot use #help' do
-      expect(game_w_questions.current_game_question.help_hash[:audience_help]).not_to be
-      expect(game_w_questions.audience_help_used).to be_falsey
       put :help, id: game_w_questions.id, help_type: :audience_help
       game = assigns(:game)
       

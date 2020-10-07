@@ -162,15 +162,9 @@ RSpec.describe GamesController, type: :controller do
     end
     
     it 'answers wrong' do
-      right_answers_arr = game_w_questions.current_game_question.variants.keys
+      right_answers = game_w_questions.current_game_question.variants.keys
       right_answer = game_w_questions.current_game_question.correct_answer_key
-      wrong_answers = right_answers_arr.reject { |el| el == right_answer}
-          # case right_answer
-          # when 'a' then 'b'
-          # when 'b' then 'a'
-          # when 'c' then 'd'
-          # when 'd' then 'c'
-          # end
+      wrong_answers = right_answers.reject { |el| el == right_answer}.sample
       
       put :answer, id: game_w_questions.id, letter: wrong_answers
       game = assigns(:game)
@@ -178,7 +172,7 @@ RSpec.describe GamesController, type: :controller do
       expect(game.finished?).to be(true)
       expect(response).to redirect_to(user_path(user))
       expect(flash[:alert]).to be
-      expect(game_w_questions.status).to eq(:fail)
+      expect(game.status).to eq(:fail)
     end
     
     # тест на отработку "помощи зала"

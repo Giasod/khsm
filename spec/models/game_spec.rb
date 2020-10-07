@@ -88,25 +88,33 @@ RSpec.describe Game, type: :model do
   context '.answer_current_question!' do
     #right, wrong, last, timeout
     let(:q) { game_w_questions.current_game_question }
-    let(:answer) { game_w_questions.answer_current_question!(q.correct_answer_key) }
+    subject(:answer) { game_w_questions.answer_current_question!(q.correct_answer_key) }
     
     it 'correct answer given' do
       expect(answer).to be_truthy
+      expect(game_w_questions.status).to eq(:in_progress)
+      expect(game_w_questions.finished?).to be_falsey
     end
     
     it 'wrong answer given' do
       expect(game_w_questions.answer_current_question!('c')).to be_falsey
+      expect(game_w_questions.status).to eq(:fail)
+      expect(game_w_questions.finished?).to be_truthy
     end
     
     it 'last correct answer given' do
       game_w_questions.current_level = 14
       expect(answer).to be_truthy
+      expect(game_w_questions.status).to eq(:won)
+      expect(game_w_questions.finished?).to be_truthy
     end
     
     it 'game finished due to timeout' do
       game_w_questions.created_at = 1.hour.ago
       game_w_questions.finished_at = Time.now
       expect(answer).to be_falsey
+      expect(game_w_questions.status).to eq(:timeout)
+      expect(game_w_questions.finished?).to be_truthy
     end
   end
   

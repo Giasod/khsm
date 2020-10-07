@@ -171,7 +171,7 @@ RSpec.describe GamesController, type: :controller do
     it 'answers wrong' do
       right_answers = game_w_questions.current_game_question.variants.keys
       right_answer = game_w_questions.current_game_question.correct_answer_key
-      wrong_answers = right_answers.reject { |el| el == right_answer}.sample
+      wrong_answer = right_answers.reject { |el| el == right_answer}.sample
       
       put :answer, id: game_w_questions.id, letter: wrong_answers
       game = assigns(:game)

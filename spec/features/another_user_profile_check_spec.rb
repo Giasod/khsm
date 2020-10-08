@@ -2,16 +2,20 @@ require 'rails_helper'
 
 RSpec.feature 'USER checks another user profile', type: :feature do
   let(:first_user) { FactoryGirl.create :user }
-  let(:second_user) { FactoryGirl.create :user, id: 2 }
-  let(:first_game) { FactoryGirl.create :game, balance: 1000, user: second_user }
-  let(:second_game) { FactoryGirl.create :game, balance: 0, status: :fail, user: second_user }
+  let(:second_user) { FactoryGirl.create :user }
+  let(:first_game) { FactoryGirl.create :game, prize: 1000, user: second_user }
+  let(:second_game) { FactoryGirl.create :game, user: second_user }
+  
+  let!(:games) { [first_game, second_game] }
   
   scenario 'success' do
     visit '/'
     
-    click_link second_user.name
+    expect(page).to have_text(second_user.name)
     
-    expect(page).to have_current_path 'users/2'
+    click_link second_user.name
+
+    expect(page).to have_current_path "/users/#{second_user.id}"
     
     # Проверка, что первый пользователь видит только то, что положено
     expect(page).to have_text second_user.name
@@ -19,10 +23,10 @@ RSpec.feature 'USER checks another user profile', type: :feature do
     
     # Проверка дат, выигрышей и тд
     expect(page).to have_content('Выигрыш')
-    expect(page).to have_content(1000)
+    expect(page).to have_content(0)
+    expect(page).to have_content('1 000 ₽')
     expect(page).to have_content('Подсказки')
-    expect(page).to have_content(first_game.created_at)
-    expect(page).to have_content(second_game.created_at)
-    expect(page).to have_content('проигрыш')
+    expect(page).to have_content(I18n.l(first_game.created_at, format: :short))
+    expect(page).to have_content(I18n.l(second_game.created_at, format: :short))
   end
 end

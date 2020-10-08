@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 RSpec.feature 'USER checks another user profile', type: :feature do
-  let(:first_user) { FactoryGirl.create :user }
-  let(:second_user) { FactoryGirl.create :user }
-  let(:first_game) { FactoryGirl.create :game, prize: 1000, user: second_user }
-  let(:second_game) { FactoryGirl.create :game, user: second_user }
+  let(:first_user) { FactoryBot.create :user }
+  let(:second_user) { FactoryBot.create :user }
+  let(:first_game) { FactoryBot.create :game, prize: 1000, user: second_user }
+  let(:second_game) { FactoryBot.create :game, user: second_user }
   
   let!(:games) { [first_game, second_game] }
   

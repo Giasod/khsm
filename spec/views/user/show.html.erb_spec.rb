@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe 'users/show', type: :view do
-  let(:user) { FactoryGirl.create(:user, name: 'Test') } # нам нужен залогиненный юзер
+  let(:user) { FactoryBot.create(:user, name: 'Test') } # нам нужен залогиненный юзер
   
   before(:each) do
     assign(:user, user) # назначаем юзера
     sign_in user # log in
-    assign(:game, [ FactoryGirl.build_stubbed(:game)]) # назначаем игру
+    assign(:game, [ FactoryBot.build_stubbed(:game)]) # назначаем игру
     
     render
   end

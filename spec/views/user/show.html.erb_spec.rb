@@ -1,13 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe 'users/show', type: :view do
-  let(:user) { create(:user, name: 'Test') } # нам нужен залогиненный юзер
-  let(:user) { create(:user, name: 'Second_Test') } # нам нужен залогиненный юзер
+  let(:first_user) { create(:user, name: 'Test') } # нам нужен залогиненный юзер
+  let(:second_user) { create(:user, name: 'Second_Test') } # нам нужен залогиненный юзер
   
   context 'user see his own page' do
     before(:each) do
-      assign(:user, user) # назначаем юзера
-      sign_in user # log in
+      assign(:user, first_user) # назначаем юзера
+      sign_in first_user # log in
       assign(:games, [build_stubbed(:game)]) # назначаем игру
     
       render
@@ -28,7 +28,7 @@ RSpec.describe 'users/show', type: :view do
   
   context 'first user looks at second user page' do
     before(:each) do
-      assign(:user, user)
+      assign(:user, second_user)
       assign(:games, [build_stubbed(:game)])
 
       render
